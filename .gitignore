@@ -1,2 +1,2 @@
 .DS_Store
-./src/apiKey.js
+/src/apiKey.js
