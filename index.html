@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>NFT ACCOUNT DATAVIS</title>
+		<!-- AUTHOR: Kaigani - 2021 -->
+
+		<!-- mobile viewport: -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta property="og:title" content="NFT Account Datavis">
+		<meta property="og:image" content="https://kaigani.github.io/art-excess-bits/img/promo.png">
+		<meta property="og:description" content="Visualization of 12 project account holders by @kaigani">
+		<meta property="og:url" content="https://kaigani.github.io/">
+		<meta name="twitter:card" content="summary_large_image">
+
+		<!-- CODE HERE -->
+        
+
+        <script src="data/db_accounts.js"></script>  
+           
+
+		<script>
+
+            const cols = 256
+            const rows = 128
+            const size = 6
+
+			window.addEventListener('load',()=>{
+
+                let canvas = document.createElement('canvas')
+                
+
+                canvas.width = cols*size
+                canvas.height = rows*size*2 // space below for projects
+                document.body.appendChild(canvas)
+                let c = canvas.getContext('2d')
+
+                let accounts = Object.keys(db_accounts)
+                let i = 0
+				
+                
+                for(let y=0;y<rows*size && i<accounts.length;y+=size){
+                    for(let x=0;x<cols*size && i<accounts.length;x+=size){
+                        
+
+                        // Account data
+                        let projectMap = db_accounts[accounts[i]] // holdings per project
+                        let segSize = canvas.width/projectMap.length
+                        let totalCount = 0
+                        let overlap = projectMap.reduce( (prev,curr)=>{
+                            totalCount += curr
+                            return curr > 0 ? prev+1 : prev
+                        },0)
+                        let weight = overlap / projectMap.length
+
+                        // Circle for account
+                        let radius = (size-2)/2
+                        if(weight < 0.2){
+                            c.fillStyle = `rgba(128,128,128,${parseInt(weight*100)}%)` 
+                        }else if(weight < 0.4){
+                            c.fillStyle = `rgba(0, 64, 255,${parseInt(weight*100)}%)` 
+                        }else if(weight < 0.6){
+                            c.fillStyle = `rgba(255, 102, 50,${parseInt(weight*100)}%)` 
+                        }else if(weight < 0.8){
+                            c.fillStyle = `rgba(255, 44, 136,${parseInt(weight*100)}%)`				 
+                        }else{
+                            c.fillStyle = `rgba(255, 0, 0,${parseInt(weight*100)}%)`
+                        }
+
+                        if(totalCount < 6){
+                            //c.fillStyle = `rgba(128,128,128,${parseInt(weight*100)}%)` 
+                        }else if(totalCount < 12){
+                            //c.fillStyle = `rgba(0, 64, 255,${parseInt(weight*100)}%)` 
+                            radius *= 1.2
+                        }else if(totalCount < 25){
+                            //c.fillStyle = `rgba(255, 102, 50,${parseInt(weight*100)}%)` 
+                            radius *= 1.4
+                        }else if(totalCount < 100){
+                            //c.fillStyle = `rgba(255, 44, 136,${parseInt(weight*100)}%)`	
+                            radius *= 1.6				 
+                        }else{
+                            //c.fillStyle = `rgba(255, 0, 0,${parseInt(weight*100)}%)`
+                            radius *= (totalCount/100)
+                        }
+                        
+                        //c.fillRect(x,y,size,size)
+                        c.strokeStyle = c.fillStyle
+                        
+                        c.beginPath() 
+                        c.ellipse(x+size/2,y+size/2,radius,radius, Math.PI / 4, 0, 2 * Math.PI)
+                        c.fill()
+                        
+                        
+                        // Line per account
+                        /*
+                        projectMap.map((count,j)=>{
+                            if(count > 1){
+                            
+                                //c.strokeStyle = `rgba(0,0,0,${parseInt(weight*5)}%)`
+                                c.beginPath()
+                                c.moveTo(x+size/2,y+size/2)
+                                c.lineTo(segSize*j+segSize/2, canvas.height)
+                                c.stroke()
+                            }
+                        })
+                        */
+                        
+
+                        i++
+                    }
+                }
+                
+                
+
+     
+			})
+		
+			function download(){
+
+				//draw the download token
+				let canvas = document.getElementsByTagName('canvas')[0]
+				//let c = dCanvas.getContext('2d')
+				//c.webkitImageSmoothingEnabled = false
+				//drawToken(dCanvas,tokenData)
+
+				let downloadLink = document.createElement('a')
+				//let canvas = document.getElementById('myCanvas')
+
+				downloadLink.href = canvas.toDataURL('image/png')
+				downloadLink.download = 'test_image'
+				downloadLink.click()
+			}
+			
+	
+    		function BlockElasticScroll(event) {
+        		event.preventDefault();
+    		}
+    	</script>
+		
+		<style type="text/css" media="screen">
+		
+			* {
+			  box-sizing: border-box;
+			}
+
+			@font-face {
+			    font-family: 'apple_ii';
+			    src: url('PrintChar21.ttf');
+			}
+			
+			body {
+			  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+			}
+			
+			canvas {
+				margin: 8px
+			}
+
+            /* Style the header */
+			.header {
+			  padding: 30px;
+			  font-size: 16px;
+			}
+			
+			/* Container for flexboxes */
+			.row {
+			  display: -webkit-flex;
+			  display: flex;
+			}
+			
+			</style>
+		
+	</head>
+	<body ontouchmove="BlockElasticScroll(event);">
+		
+		
+		<div class="header">
+		  <p>NFT Datavis: <b>Accounts</b> - <a href='index_projects.html'>Projects</a></p>
+		</div>
+		
+		
+		</body>
+		</html>
+</html>
+		

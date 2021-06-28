@@ -1,0 +1,11 @@
+{
+  "name": "NFT Datavis",
+  "version": "1.0.0",
+  "description": "Analysis of accounts across projects",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node ./src/importAccounts.js && node ./src/analyzeAccounts.js "
+  },
+  "author": "@kaigani",
+  "license": "ISC"
+}
